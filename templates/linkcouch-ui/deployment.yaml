@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: linkcouch-api
+  labels:
+    app: linkcouch-api
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  template:
+    metadata:
+      labels:
+        app: linkcouch-api
+    spec:
+      containers:
+      - name: linkcouch-api
+        image: "{{ .Values.linkcouchAPIImage }}"
+        imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
+        env:
+        ports:
+        - name: epmd
+          containerPort: 3000
