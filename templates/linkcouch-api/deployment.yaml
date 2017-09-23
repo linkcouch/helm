@@ -21,3 +21,7 @@ spec:
         ports:
         - name: epmd
           containerPort: 3000
+        resources:
+          requests:
+            memory: 64Mi
+            cpu: 100m
