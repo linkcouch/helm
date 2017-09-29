@@ -2,7 +2,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: rabbitmq
+  name: {{ template "rabbitmq.fullname" . }}
 spec:
   accessModes:
     - {{ .Values.persistence.accessMode | quote }}

@@ -1,17 +1,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: linkcouch-ui
+  name: {{ template "linkcouch-ui.fullname" . }}
   labels:
-    app: linkcouch-ui
+    app: {{ template "linkcouch-ui.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
   type: {{ .Values.serviceType }}
   ports:
-  - name: linkcouch-ui
+  - name: {{ template "linkcouch-ui.fullname" . }}
     port: 80
     targetPort: 80
   selector:
-    app: linkcouch-ui
+    app: {{ template "linkcouch-ui.fullname" . }}

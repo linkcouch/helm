@@ -1,9 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: linkcouch-ui
+  name: {{ template "linkcouch-ui.fullname" . }}
   labels:
-    app: linkcouch-ui
+    app: {{ template "linkcouch-ui.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
@@ -11,15 +11,15 @@ spec:
   template:
     metadata:
       labels:
-        app: linkcouch-ui
+        app: {{ template "linkcouch-ui.fullname" . }}
     spec:
       containers:
-      - name: linkcouch-ui
+      - name: {{ template "linkcouch-ui.fullname" . }}
         image: "{{ .Values.linkcouchUIImage }}"
         imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
         env:
         ports:
-          - name: linkcouch-ui
+          - name: web
             containerPort: 80
         resources:
           requests:

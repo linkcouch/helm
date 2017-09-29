@@ -1,9 +1,9 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: rabbitmq
+  name: {{ template "rabbitmq.fullname" . }}
   labels:
-    app: rabbitmq
+    app:  {{ template "rabbitmq.fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
@@ -11,46 +11,46 @@ spec:
   template:
     metadata:
       labels:
-        app: rabbitmq
+        app:  {{ template "rabbitmq.fullname" . }}
     spec:
       containers:
-      - name: rabbitmq
+      - name:  {{ template "rabbitmq.fullname" . }}
         image: "{{ .Values.rabbitMqImage }}"
         imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
         env:
         - name: RABBITMQ_USERNAME
-          value: {{ default "" .Values.rabbitmqUsername | quote }}
+          value: {{ default "" .Values.rabbitmq.rabbitmqUsername | quote }}
         - name: RABBITMQ_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: rabbitmq
+              name: {{ template "rabbitmq.fullname" . }}
               key: rabbitmq-password
         - name: RABBITMQ_ERLANG_COOKIE
           valueFrom:
             secretKeyRef:
-              name: rabbitmq
+              name: {{ template "rabbitmq.fullname" . }}
               key: rabbitmq-erlang-cookie
         - name: RABBITMQ_NODE_PORT_NUMBER
-          value: {{ default "5672" .Values.rabbitmqNodePort | quote }}
+          value: {{ default "5672" .Values.rabbitmq.rabbitmqNodePort | quote }}
         - name: RABBITMQ_NODE_TYPE
-          value: {{ default "stats" .Values.rabbitmqNodeType | quote }}
+          value: {{ default "stats" .Values.rabbitmq.rabbitmqNodeType | quote }}
         - name: RABBITMQ_NODE_NAME
-          value: {{ printf "%s@%s" (default "rabbit" .Values.rabbitmqNodeName) "localhost" | quote }}
+          value: {{ printf "%s@%s" (default "rabbit" .Values.rabbitmq.rabbitmqNodeName) "localhost" | quote }}
         - name: RABBITMQ_CLUSTER_NODE_NAME
-          value: {{ default "" .Values.rabbitmqClusterNodeName | quote }}
+          value: {{ default "" .Values.rabbitmq.rabbitmqClusterNodeName | quote }}
         - name: RABBITMQ_VHOST
-          value: {{ default "/" .Values.rabbitmqVhost | quote }}
+          value: {{ default "/" .Values.rabbitmq.rabbitmqVhost | quote }}
         - name: RABBITMQ_MANAGER_PORT_NUMBER
-          value: {{ default "15672" .Values.rabbitmqManagerPort | quote }}
+          value: {{ default "15672" .Values.rabbitmq.rabbitmqManagerPort | quote }}
         ports:
         - name: epmd
           containerPort: 4369
         - name: amqp
-          containerPort: {{ default "5672" .Values.rabbitmqNodePort }}
+          containerPort: {{ default "5672" .Values.rabbitmq.rabbitmqNodePort }}
         - name: dist
-          containerPort: {{ default "5672" .Values.rabbitmqNodePort | add 20000 }}
+          containerPort: {{ default "5672" .Values.rabbitmq.rabbitmqNodePort | add 20000 }}
         - name: stats
-          containerPort: {{ default "15672" .Values.rabbitmqManagerPort }}
+          containerPort: {{ default "15672" .Values.rabbitmq.rabbitmqManagerPort }}
         livenessProbe:
           exec:
             command:
