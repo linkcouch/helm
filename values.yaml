@@ -23,3 +23,36 @@ resources:
   requests:
     memory: 256Mi
     cpu: 100m
+
+hub:
+  image: "selenium/hub"
+  tag: "3.4.0"
+  pullPolicy: "IfNotPresent"
+  port: 4444
+  readinessTimeout: 1
+  javaOpts: "-Xmx400m"
+  resources:
+    limits:
+      cpu: ".5"
+      memory: "512Mi"
+  serviceType: "LoadBalancer"
+  serviceSessionAffinity: "None"
+
+chrome:
+  enabled: false
+  image: "selenium/node-chrome"
+  tag: "3.4.0"
+  pullPolicy: "IfNotPresent"
+  replicas: 1
+  javaOpts: "-Xmx900m"
+  volumes:
+    - name: dshm
+      emptyDir:
+        medium: Memory
+  volumeMounts:
+    - mountPath: /dev/shm
+      name: dshm
+  resources:
+    limits:
+      cpu: ".5"
+      memory: "1000Mi"

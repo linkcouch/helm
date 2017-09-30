@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "selenium-chrome.fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: {{ .Values.chrome.replicas }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "selenium-chrome.fullname" . }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: "{{ .Release.Name }}"
+        heritage: "{{ .Release.Service }}"
+      annotations:
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.chrome.image }}:{{ .Values.chrome.tag }}"
+          imagePullPolicy: {{ .Values.chrome.pullPolicy }}
+          ports:
+            {{- if .Values.hub.jmxPort }}
+            - containerPort: {{ .Values.hub.jmxPort }}
+              name: jmx
+              protocol: TCP
+            {{- end }}
+          env:
+            - name: HUB_PORT_4444_TCP_ADDR
+              value: {{ template "selenium-hub.fullname" . }}
+            - name: HUB_PORT_4444_TCP_PORT
+              value: {{ .Values.hub.port | quote }}
+            - name: JAVA_OPTS
+              value: {{ default "" .Values.chrome.javaOpts | quote }}
+            - name: SE_OPTS
+              value: {{ default "" .Values.chrome.seOpts | quote }}
+          volumeMounts:
+{{ if .Values.chrome.volumeMounts -}}
+{{ toYaml .Values.chrome.volumeMounts | indent 12 }}
+{{- end }}
+          resources:
+{{ toYaml .Values.chrome.resources | indent 12 }}
+      volumes:
+{{ if .Values.chrome.volumes -}}
+{{ toYaml .Values.chrome.volumes | indent 8 }}
+{{- end -}}

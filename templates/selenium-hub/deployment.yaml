@@ -1,0 +1,47 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "selenium-hub.fullname" . }}
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "selenium-hub.fullname" . }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+        release: "{{ .Release.Name }}"
+        heritage: "{{ .Release.Service }}"
+      annotations:
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.hub.image }}:{{ .Values.hub.tag }}"
+          imagePullPolicy: {{ .Values.hub.pullPolicy }}
+          ports:
+            {{- if .Values.hub.jmxPort }}
+            - containerPort: {{ .Values.hub.jmxPort }}
+              name: jmx
+              protocol: TCP
+            {{- end }}
+            - containerPort: {{ .Values.hub.port }}
+              name: http
+          livenessProbe:
+            httpGet:
+              path: /grid/console
+              port: {{ .Values.hub.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /grid/console
+              port: {{ .Values.hub.port }}
+            timeoutSeconds: {{ .Values.hub.readinessTimeout }}
+          env:
+            - name: JAVA_OPTS
+              value: {{ default "" .Values.hub.javaOpts | quote }}
+            - name: SE_OPTS
+              value: {{ default "" .Values.hub.seOpts | quote }}
+          resources:
+{{ toYaml .Values.hub.resources | indent 12 }}

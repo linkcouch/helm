@@ -13,3 +13,11 @@
 {{- define "linkcouch-screenshots-api.fullname" -}}
 {{- printf "%s-linkcouch-screenshots-api" .Release.Name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{- define "selenium-hub.fullname" -}}
+{{- printf "%s-selenium-hub" .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "selenium-chrome.fullname" -}}
+{{- printf "%s-selenium-chrome" .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
