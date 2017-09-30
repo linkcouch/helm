@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "linkcouch-screenshots-api.fullname" . }}
+  labels:
+    app: {{ template "linkcouch-screenshots-api.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  template:
+    metadata:
+      labels:
+        app: {{ template "linkcouch-screenshots-api.fullname" . }}
+    spec:
+      containers:
+      - name: {{ template "linkcouch-screenshots-api.fullname" . }}
+        image: "{{ .Values.linkcouchScreenshotsAPIImage }}"
+        imagePullPolicy: {{ default "" .Values.imagePullPolicy | quote }}
+        env:
+          - name: mq_host
+            value: {{ template "rabbitmq.fullname" . }}
+          - name: mq_username
+            value: {{ default "" .Values.rabbitmq.rabbitmqUsername | quote }}
+          - name: mq_password
+            value: {{ default "" .Values.rabbitmq.rabbitmqPassword | quote }}
+        ports:
+        - name: web
+          containerPort: 3000
+        resources:
+          requests:
+            memory: 64Mi
+            cpu: 100m

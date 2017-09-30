@@ -1,5 +1,6 @@
 linkcouchUIImage: eahedav/linkcouch-ui:latest
 linkcouchAPIImage: eahedav/linkcouch-backend:latest
+linkcouchScreenshotsAPIImage: eahedav/linkcouch-screenshots-api:latest
 rabbitMqImage: bitnami/rabbitmq:latest
 
 rabbitmq:
