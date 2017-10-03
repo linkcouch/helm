@@ -33,8 +33,7 @@ hub:
   javaOpts: "-Xmx400m"
   resources:
     limits:
-      cpu: ".5"
-      memory: "512Mi"
+      memory: "256Mi"
   serviceType: "LoadBalancer"
   serviceSessionAffinity: "None"
 
@@ -54,5 +53,4 @@ chrome:
       name: dshm
   resources:
     limits:
-      cpu: ".5"
-      memory: "1000Mi"
+      memory: "600Mi"
