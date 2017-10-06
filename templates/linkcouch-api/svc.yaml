@@ -8,7 +8,7 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
-  type: {{ .Values.serviceType }}
+  type: LoadBalancer
   ports:
   - name: {{ template "linkcouch-api.fullname" . }}
     port: 3000

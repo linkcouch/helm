@@ -1,16 +1,16 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: linkcouch-ui-ingress
+  name:  {{ template "linkcouch-ui.fullname" . }}
 spec:
-  tls:
-  - hosts:
-    - linkcouch.com
   rules:
-  - host: linkcouch.com
-    http:
+  - http:
       paths:
-      - path: /
+      - path: /*
         backend:
-          serviceName: linkcouch-ui
+          serviceName: {{ template "linkcouch-ui.fullname" . }}
           servicePort: 80
+      - path: /linkcouch-api/*
+        backend:
+          serviceName: {{ template "linkcouch-api.fullname" . }}
+          servicePort: 3000
