@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name:  {{ template "linkcouch-ui.fullname" . }}
   annotations:
-    ingress.kubernetes.io/rewrite-target: /
+    nginx.org/rewrites: "serviceName=test-linkcouch-api rewrite=/"
 spec:
   rules:
   - http:
